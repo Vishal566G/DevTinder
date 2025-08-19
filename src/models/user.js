@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,10 +18,20 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is not valid: " + value);
+        }
+      },
     },
     password: {
       type: String,
       required: true,
+      validate(value) {
+        if (!validator.isStrongPassword(value)) {
+          throw new Error("Password is not strong: " + value);
+        }
+      },
     },
     age: {
       type: Number,
@@ -30,12 +41,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       validate(value) {
         if (!["male", "female", "others"].includes(value)) {
-          throw new Error("Gender data not valid!!");
+          throw new Error("Gender data not valid: " + value);
         }
       },
     },
     photoURL: {
       type: String,
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("URL is not valid: " + value);
+        }
+      },
     },
     about: {
       type: String,
