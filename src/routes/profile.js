@@ -1,5 +1,6 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
+const bcrypt = require("bcrypt");
 const profileRouter = express.Router();
 const {
   validateEditProfileData,
@@ -43,7 +44,9 @@ profileRouter.patch("/profile/password", userAuth, async (req, res) => {
 
   validateUpdatedPassword(req);
 
-  loggedInUser.password = req.body.password;
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  loggedInUser.password = passwordHash;
 
   await loggedInUser.save();
   res.json({

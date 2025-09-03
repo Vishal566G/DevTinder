@@ -3,7 +3,6 @@ const connectDB = require("./config/database");
 const app = express();
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const { validateEditProfileData } = require("./utils/validation");
 
 app.use(express.json());
 app.use(cookieParser());
