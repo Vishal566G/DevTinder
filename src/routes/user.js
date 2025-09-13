@@ -1,0 +1,23 @@
+const express = require("express");
+const userRouter = express.Router();
+const { userAuth } = require("../middlewares/auth");
+const ConenctionRequest = require("../models/connectionRequest");
+
+userRouter.get("/user/requests/received", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionRequest = await ConenctionRequest.find({
+      toUserId: loggedInUser._id,
+    });
+
+    res.json({
+      message: "Data fetched successfully",
+      data: connectionRequest,
+    });
+  } catch (err) {
+    res.status(400).send("Error: " + err.message);
+  }
+});
+
+module.exports = userRouter;
