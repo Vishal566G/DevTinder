@@ -21,4 +21,21 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   }
 });
 
+userRouter.get("/user/connections", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionRequests = await ConenctionRequest.find({
+      $or: [
+        { toUserId: loggedInUser._id, status: "accepted" },
+        { fromUserId: loggedInUser._id, status: "accepted" },
+      ],
+    }).populate("fromUserId", "firstName lastName");
+
+    res.json({ data: connectionRequests });
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
 module.exports = userRouter;
