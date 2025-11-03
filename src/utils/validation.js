@@ -26,7 +26,7 @@ const validateEditProfileData = (req) => {
   const { age, gender, photoURL, about, skills } = req.body;
 
   const allowedUpdates = [
-    "fistName",
+    "firstName",
     "lastName",
     "emailId",
     "age",
@@ -36,16 +36,16 @@ const validateEditProfileData = (req) => {
     "skills",
   ];
 
-  if (!validator.isInt(age)) {
+  if (age && !validator.isInt(age.toString())) {
     throw new Error("Age is not valid");
-  } else if (!validator.isLength(gender, { min: 3, max: 6 })) {
+  } else if (gender && !validator.isLength(gender, { min: 3, max: 6 })) {
     throw new Error("Enter a valid gender");
-  } else if (!validator.isURL(photoURL)) {
+  } else if (photoURL && photoURL && !validator.isURL(photoURL)) {
     throw new Error("Photo URL is not valid");
-  } else if (!validator.isLength(about, { min: 4, max: 50 })) {
+  } else if (about && !validator.isLength(about, { min: 4, max: 50 })) {
     throw new Error("Enter something about yourself");
-  } else if (skills.length === 0) {
-    throw new Error("Enter atleast 1 skill");
+  } else if (skills && skills.length === 0) {
+    throw new Error("Enter at least 1 skill");
   }
 
   const isUpdateAllowed = Object.keys(req.body).every((field) =>
